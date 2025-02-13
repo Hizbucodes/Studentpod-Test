@@ -57,11 +57,45 @@ const updateTask = catchAsync(async (req, res, next) => {
   });
 });
 
-const deleteTask = catchAsync(async (req, res, next) => {});
+const deleteTask = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const task = await Task.findByPk(id);
+
+  if (!task) {
+    return next(new AppError("Task not found", 404));
+  }
+
+  await task.destroy();
+
+  return res.status(200).json({
+    status: "success",
+    message: "Task deleted successfully",
+  });
+});
+
+const toggleTaskStatus = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const task = await Task.findByPk(id);
+
+  if (!task) {
+    return next(new AppError("Task not found", 404));
+  }
+
+  task.status = task.status === "pending" ? "completed" : "pending";
+
+  await task.save();
+
+  return res.status(200).json({
+    status: "success",
+    message: "Task status toggled successfully",
+    task,
+  });
+});
 
 module.exports = {
   createTask,
   getTasks,
   updateTask,
   deleteTask,
+  toggleTaskStatus,
 };
