@@ -19,11 +19,26 @@ const createTask = catchAsync(async (req, res, next) => {
   }
 });
 
-const getTasks = catchAsync(async (req, res) => {});
+const getTasks = catchAsync(async (req, res, next) => {
+  try {
+    const { status } = req.query;
+    const tasks = status
+      ? await Task.findAll({ where: status })
+      : await Task.findAll();
 
-const updateTask = catchAsync(async (req, res) => {});
+    return res.status(200).json({
+      status: "success",
+      message: "successfully retrieved tasks",
+      result: tasks,
+    });
+  } catch (err) {
+    return next(new AppError("Internal Server Error", 500));
+  }
+});
 
-const deleteTask = catchAsync(async (req, res) => {});
+const updateTask = catchAsync(async (req, res, next) => {});
+
+const deleteTask = catchAsync(async (req, res, next) => {});
 
 module.exports = {
   createTask,
