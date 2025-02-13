@@ -13,9 +13,27 @@ module.exports = sequelize.define(
     },
     title: {
       type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Title cannot be Null",
+        },
+        notEmpty: {
+          msg: "Title cannot be Empty",
+        },
+      },
     },
     description: {
       type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Description cannot be null",
+        },
+        notEmpty: {
+          msg: "Description cannot be Empty",
+        },
+      },
     },
     status: {
       type: Sequelize.ENUM("completed", "pending"),
