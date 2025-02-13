@@ -4,6 +4,7 @@ const express = require("express");
 const catchAsync = require("./utils/catchAsync.js");
 const globalErrorHanlder = require("./controller/error.controller.js");
 const taskRoute = require("./routes/task.routes.js");
+const AppError = require("./utils/AppError.js");
 
 const app = express();
 app.use(express.json());
@@ -20,7 +21,9 @@ app.get("/", (req, res) => {
 app.use(
   "*",
   catchAsync(async (req, res, next) => {
-    throw new AppError(`Can't find ${req.originalUrl} on this server`, 404);
+    return next(
+      new AppError(`Can't find ${req.originalUrl} on this server`, 404)
+    );
   })
 );
 

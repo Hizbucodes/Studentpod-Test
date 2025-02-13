@@ -36,7 +36,26 @@ const getTasks = catchAsync(async (req, res, next) => {
   }
 });
 
-const updateTask = catchAsync(async (req, res, next) => {});
+const updateTask = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { title, description } = req.body;
+
+  const task = await Task.findByPk(id);
+
+  if (!task) {
+    return next(new AppError("Task not Found", 404));
+  }
+
+  task.title = title;
+  task.description = description;
+
+  await task.save();
+
+  return res.status(200).json({
+    status: "success",
+    message: "successfully updated the task",
+  });
+});
 
 const deleteTask = catchAsync(async (req, res, next) => {});
 
